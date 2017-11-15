@@ -31,8 +31,8 @@ def home(request):
             search_term = request.GET['search_term']
             results = call_recipe_search(search_term)
             recipe_list = results['hits']
-            print recipe_list
         except MultiValueDictKeyError:
+            recipe_list= []
             search_term = None
     elif request.method == "POST":
         search_term = request.POST.get('search_term')

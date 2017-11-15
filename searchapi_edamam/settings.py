@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 
+from decouple import config
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,11 +22,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'hxzc@z%j32vz@mz#95!4tl0&aaq32_^1$l^o^a1oue71_onbat'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = config('DEBUG', default=False, cast=bool)
+LOCAL = config('LOCAL', default=False, cast=bool)
 ALLOWED_HOSTS = ['searchapi-edamam-jrbenriquez.c9users.io']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -76,16 +78,26 @@ WSGI_APPLICATION = 'searchapi_edamam.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'edamamsearch',
-        'USER': 'admin',
-        'PASSWORD': '1234567890',
-        'HOST': 'localhost',
-        'PORT': '',
+
+
+
+if LOCAL:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'edamamsearch',
+            'USER': 'admin',
+            'PASSWORD': '1234567890',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config('DATABASE_URL')
+        )
+    }
 
 
 # Password validation

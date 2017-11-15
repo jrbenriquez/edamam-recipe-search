@@ -62,7 +62,7 @@
                 <a href="{{ r.recipe.url }}">
                   <div class="card u-clearfix">
                     <div class="card-body">
-                      <span class="card-number card-circle subtle">{{ forloop.counter }}</span>
+                      <span class="card-number card-circle subtle">{{ forloop.counter0|add:recipes.start_index }}</span>
                       <span class="card-author subtle">{{ r.recipe.source }}</span>
                       <h3 class="card-title">{{ r.recipe.label }}</h3>
                       <span class="card-description subtle">
