@@ -7,7 +7,7 @@
     ----------------------------------------------------------------- 
 
 
-This projects was developed with Cloud9 IDE!
+This project was developed with Cloud9 IDE!
 
 Basic API interaction with the Edamam Recipe Search API
 
