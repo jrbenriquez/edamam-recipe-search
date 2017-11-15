@@ -1,0 +1,1 @@
+web: gunicorn searchapi_edamam.wsgi --log-file -

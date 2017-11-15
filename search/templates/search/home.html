@@ -1,0 +1,112 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Edamam Recipe Search</title>
+
+    <!-- Bootstrap -->
+    <link href="{% static 'search/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'search/css/recipe_card.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+     
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+               <h1>Edamam Recipe Search API</h1>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <form action="{% url 'home' %}" method="post">
+                     {% csrf_token %}
+                     <input type="text" name="search_term"><br>
+                     <input type="submit" value="Search">
+                </form>
+            </div>
+        </div>
+        {% if recipes %}
+        <div class="row pagination">
+                <span class="step-links">
+                    {% if recipes.has_previous %}
+                        <a href="?page={{ recipes.previous_page_number }}&search_term={{ search_term }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ recipes.number }} of {{ recipes.paginator.num_pages }}.
+                    </span>
+            
+                    {% if recipes.has_next %}
+                        <a href="?page={{ recipes.next_page_number }}&search_term={{ search_term }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+        <div class="row">
+            <div class="col-xs-12">
+                {% for r in recipes %}
+                <div class="card-container">
+                <a href="{{ r.recipe.url }}">
+                  <div class="card u-clearfix">
+                    <div class="card-body">
+                      <span class="card-number card-circle subtle">{{ forloop.counter }}</span>
+                      <span class="card-author subtle">{{ r.recipe.source }}</span>
+                      <h3 class="card-title">{{ r.recipe.label }}</h3>
+                      <span class="card-description subtle">
+                          <strong>{{ r.recipe.calories| floatformat:"0" }} kCal</strong><br>
+                          <strong>{{ r.recipe.totalWeight| floatformat:"0" }} g</strong><br>
+                          <strong>{{ r.recipe.ingredients|length }} ingredient{% if r.recipe.ingredients|length > 1 %}s {% endif %}</strong><br>
+                      </span>
+                      <div class="card-read"><a href="{{ r.recipe.url }}" >Read </a></div>
+                      {% for label in r.recipe.dietLabels %}
+                      <span class="card-tag subtle">{{ label }},</span>
+                      {% endfor %}
+                      {% for label in r.recipe.healthLabels %}
+                      <span class="card-tag subtle">{{ label }},</span>
+                      {% endfor %}
+                    </div>
+                    <img src="{{ r.recipe.image }}" alt="" class="card-media" />
+                  </div>
+                  <div class="card-shadow"></div>
+                </div>
+                </a>
+                {% endfor %}
+            </div>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if recipes.has_previous %}
+                        <a href="?page={{ recipes.previous_page_number }}&search_term={{ search_term }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ recipes.number }} of {{ recipes.paginator.num_pages }}.
+                    </span>
+            
+                    {% if recipes.has_next %}
+                        <a href="?page={{ recipes.next_page_number }}&search_term={{ search_term }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'search/js/jquery.min.js' %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src"{% static 'search/js/bootstrap.min.js' %}"></script>
+  </body>
+</html>
